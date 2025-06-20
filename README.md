@@ -1,4 +1,4 @@
-# inprintzOrdering
+# inprintz-ordering
 Trying to create an order page
 
 Inprintz currently takes orders through email and phone, but this isn't very organized. This project will attempt to create a database that is both accessible by the employees, and clients can make requests to order through the website. All orders will be placed on an order table with different states. I am thinking that an order can be put into multiple states: Completed, In-Progress, Placed, Cancelled. All orders can be searched using an order number. 
