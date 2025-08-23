@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  //Order Information
+  id          String  @id @default(uuid()) 
+  job_number  Int     @unique @default(autoincrement())
+  slug  String
+  created_at  DateTime @default(now())
+  job_name    String
+  client String
+  contact String
+  po_number String?
+  sales_rep String?
+  orderStatus OrderStatus @default(NOT_STARTED)
+  financialStatus FinancialStatus @default(PENDING)
+
+  //Proofing
+  proofingIsRequired Boolean @default(false)
+  proofDueDate DateTime?
+  notes String?
+  proofType ProofType @default(PDF)
+  color_match_info String
+
+  //Shipping Info
+  shippingDueDate DateTime?
+  shipTo String @default("Pick up")
+  shipMethod String?
+  account String?
+
+  //Files names & location
+  filesource FileSource @default(INPRINTZ_FTP)
+  filesourcedescription String? 
+  fileFolderName String?
+
+  //Outsource materials
+  hardware String?
+  installation String?
+
+  //Additonal Information
+  additional_info_notes String?
+  
+}
+
+enum FileSource {
+  INPRINTZ_FTP
+  CLIENT_FTP
+  EMAIL
+  NEW_JOBS_FOLDER
+  VUTEK
+  HP
+  OTHER
+}
+
+enum ProofType {
+  PDF 
+  HARD_PROOF
+}
+
+enum FinancialStatus {
+  PENDING
+  INVOICED
+  PAID
+  REFUNDED 
+}
+
+enum OrderStatus {
+  NOT_STARTED
+  PROOF_AWAITING_APPROVAL
+  IN_PROGRESS
+  READY
+  COMPLETED
+  CANCELLED
+}
