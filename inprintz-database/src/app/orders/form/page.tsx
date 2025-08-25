@@ -9,6 +9,11 @@ export default function form() {
         name="job name" 
         placeholder="Job Name"
       />
+      <input
+        type="text"
+        name="client"
+        placeholder="client"
+      />
       <button
         type="submit"
       >

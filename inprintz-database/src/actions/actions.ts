@@ -9,7 +9,7 @@ export async function createOrder(formData: FormData){
             slug: (formData.get("job name") as string)
                 .replace(/\s+/g, "-")
                 .toLowerCase() || "unnamed",
-            client: formData.get("job name") as string || "unnamed",
+            client: formData.get("client") as string || "unnamed",
             contact: formData.get("job name") as string || "unnamed",
             color_match_info: formData.get("job name") as string || "unnamed",
         }
@@ -35,6 +35,7 @@ export async function updateOrder(formData: FormData){
         },
         data: { 
             job_name: formData.get("job name") as string,
+            client: formData.get("client") as string
         }
     });
 

@@ -21,6 +21,12 @@ export default async function updateForm({ params }: { params: Promise<{ id: str
         placeholder="Job Name"
         defaultValue={order?.job_name || ""}
       />
+      <input
+        type="text"
+        name="client"
+        placeholder="client"
+        defaultValue={order?.client || ""}
+      />
       <button
         type="submit"
       >
