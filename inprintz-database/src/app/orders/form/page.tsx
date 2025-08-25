@@ -8,7 +8,7 @@ export default function form() {
         type="text"
         name="job name" 
         placeholder="Job Name"
-      /> 
+      />
       <button
         type="submit"
       >

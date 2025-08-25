@@ -14,7 +14,7 @@ model Order {
   job_number  Int     @unique @default(autoincrement())
   slug  String
   created_at  DateTime @default(now())
-  job_name    String
+  job_name    String @default("UnnamedOrder")
   client String
   contact String
   po_number String?
