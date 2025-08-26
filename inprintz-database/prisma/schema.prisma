@@ -53,7 +53,7 @@ enum FileSource {
   INPRINTZ_FTP
   CLIENT_FTP
   EMAIL
-  NEW_JOBS_FOLDER
+  NEW_JOBS_FOLDER 
   VUTEK
   HP
   OTHER
@@ -61,21 +61,21 @@ enum FileSource {
 
 enum ProofType {
   PDF 
-  HARD_PROOF
+  HARD_PROOF 
 }
 
 enum FinancialStatus {
-  PENDING
+  PENDING 
   INVOICED
-  PAID
+  PAID 
   REFUNDED 
 }
 
 enum OrderStatus {
-  NOT_STARTED
-  PROOF_AWAITING_APPROVAL
+  NOT_STARTED 
+  PROOF_AWAITING_APPROVAL 
   IN_PROGRESS
-  READY
-  COMPLETED
-  CANCELLED
+  READY 
+  COMPLETED 
+  CANCELLED 
 }
