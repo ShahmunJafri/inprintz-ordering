@@ -61,7 +61,7 @@ enum FileSource {
 
 enum ProofType {
   PDF 
-  HARD_PROOF 
+  HARD_COPY 
 }
 
 enum FinancialStatus {

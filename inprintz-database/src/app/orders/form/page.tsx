@@ -3,8 +3,6 @@ import Form from 'next/form'
 
 export default function form() {
 
-  const proofTypes = ["PDF", "HARD_COPY"] as const;
-
   return (
     <Form action={createOrder}>
       <input type="text" name="job_name" placeholder="Job Name" />
@@ -19,9 +17,9 @@ export default function form() {
       </label>
       <input type="datetime-local" name="proofDueDate" placeholder="Proof Due Date" />
       <textarea name="notes" placeholder="Notes"></textarea>
-      <select name="proofType">
+      <select name="proof_type">
         <option value="PDF">PDF</option>
-        <option value="HARD_COPY">Hard Copy</option>
+        <option value="HARD_COPY">HARD COPY</option>
       </select>
       <input type="text" name="color_match_info" placeholder="Color Match Info" />
 
@@ -33,8 +31,11 @@ export default function form() {
       <select name="filesource">
         <option value="INPRINTZ_FTP">Inprintz FTP</option>
         <option value="CLIENT_FTP">Client FTP</option>
-        <option value="Email">Email</option>
-        <option value="Other">Other</option>
+        <option value="EMAIL">Email</option>
+        <option value="NEW_JOBS_FOLDER">New Jobs Folder</option>
+        <option value="VUTEK">Vutek</option>
+        <option value="HP">HP</option>
+        <option value="OTHER">Other</option>
       </select>
       <textarea name="filesourcedescription" placeholder="File Source Description"></textarea>
       <input type="text" name="fileFolderName" placeholder="File Folder Name" />

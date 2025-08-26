@@ -1,5 +1,5 @@
 "use server";
-import { ProofType } from "@/generated/prisma";
+import { ProofType, FileSource } from "@/generated/prisma";
 import prisma from "../lib/db";
 import { redirect } from 'next/navigation';
 
@@ -7,22 +7,36 @@ export async function createOrder(formData: FormData){
 
     await prisma.order.create({
         data: {
-            job_name: formData.get("job_name") as string || "unnamed",
+            job_name: formData.get("job_name") as string || "Unnamed_Order",
             slug: (formData.get("job_name") as string)
                 .replace(/\s+/g, "-")
-                .toLowerCase() || "unnamed",
-            client: formData.get("client") as string || "null",
-            contact: formData.get("contact") as string || "null",
-            po_number: formData.get("po_number") as string || "null",
-            sales_rep: formData.get("sales_rep") as string || "null",
+                .toLowerCase() || "Unnamed_Order",
+            client: formData.get("client") as string || "",
+            contact: formData.get("contact") as string || "",
+            po_number: formData.get("po_number") as string || "",
+            sales_rep: formData.get("sales_rep") as string || "",
 
             proofingIsRequired: formData.get("proofingIsRequired") === "on",
             proofDueDate: typeof formData.get("proofDueDate") === "string" && formData.get("proofDueDate")
                         ? new Date(formData.get("proofDueDate") as string) : null,
-            notes: formData.get("notes") as string || "null",
-            proofType: proofType, ///error here
-            color_match_info: formData.get("color_match_info") as string || "null",
+            notes: formData.get("notes") as string || "",
+            proofType: formData.get("proof_type") as ProofType, 
+            color_match_info: formData.get("color_match_info") as string || "",
 
+            shippingDueDate: formData.get("shippingDueDate") === "string" && formData.get("shippingDueDate")
+                        ? new Date(formData.get("shippingDueDate") as string) : null,
+            shipTo: formData.get("shipTo") as string || "Pick Up",
+            shipMethod: formData.get("shipMethod") as string || "",
+            account: formData.get("account") as string || "",
+            
+            filesource: formData.get("filesource") as FileSource,
+            filesourcedescription: formData.get("filesourcedescription") as string || "",
+            fileFolderName: formData.get("fileFolderName") as string || "",
+
+            hardware: formData.get("hardware") as string || "",
+            installation: formData.get("installation") as string || "",
+
+            additional_info_notes: formData.get("additonal_info_notes") as string || ""
          }
     });
     redirect('/');
@@ -45,10 +59,37 @@ export async function updateOrder(formData: FormData){
             id: id 
         },
         data: { 
-            job_name: formData.get("job name") as string,
-            client: formData.get("client") as string
+            job_name: formData.get("job_name") as string,
+            slug: (formData.get("job_name") as string)
+                .replace(/\s+/g, "-")
+                .toLowerCase() || "Unnamed_Order",
+            client: formData.get("client") as string,
+            contact: formData.get("contact") as string || "",
+            po_number: formData.get("po_number") as string || "",
+            sales_rep: formData.get("sales_rep") as string || "",
+
+            proofingIsRequired: formData.get("proofingIsRequired") === "on",
+            proofDueDate: typeof formData.get("proofDueDate") === "string" && formData.get("proofDueDate")
+                        ? new Date(formData.get("proofDueDate") as string) : null,
+            notes: formData.get("notes") as string || "",
+            proofType: formData.get("proof_type") as ProofType, 
+            color_match_info: formData.get("color_match_info") as string || "",
+
+            shippingDueDate: formData.get("shippingDueDate") === "string" && formData.get("shippingDueDate")
+                        ? new Date(formData.get("shippingDueDate") as string) : null,
+            shipTo: formData.get("shipTo") as string || "Pick Up",
+            shipMethod: formData.get("shipMethod") as string || "",
+            account: formData.get("account") as string || "",
+            
+            filesource: formData.get("filesource") as FileSource,
+            filesourcedescription: formData.get("filesourcedescription") as string || "",
+            fileFolderName: formData.get("fileFolderName") as string || "",
+
+            hardware: formData.get("hardware") as string || "",
+            installation: formData.get("installation") as string || "",
+
+            additional_info_notes: formData.get("additonal_info_notes") as string || ""
         }
     });
-
     redirect('/')
 }
