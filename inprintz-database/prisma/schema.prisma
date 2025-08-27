@@ -14,6 +14,7 @@ model Order {
   job_number  Int     @unique @default(autoincrement())
   slug  String
   created_at  DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   job_name    String @default("UnnamedOrder")
   client String
   contact String
@@ -47,6 +48,7 @@ model Order {
   //Additonal Information
   additional_info_notes String?
   
+  @@unique([id, updatedAt])
 }
 
 enum FileSource {
