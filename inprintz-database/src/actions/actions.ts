@@ -1,5 +1,5 @@
 "use server";
-import { ProofType, FileSource } from "@/generated/prisma";
+import { ProofType, FileSource, OrderStatus, FinancialStatus } from "@/generated/prisma";
 import prisma from "../lib/db";
 import { redirect } from 'next/navigation';
 
@@ -15,6 +15,9 @@ export async function createOrder(formData: FormData){
             contact: formData.get("contact") as string || "",
             po_number: formData.get("po_number") as string || "",
             sales_rep: formData.get("sales_rep") as string || "",
+
+            orderStatus: formData.get("orderStatus") as OrderStatus || "NOT_STARTED" as OrderStatus,
+            financialStatus: formData.get("financialStatus") as FinancialStatus || "PENDING" as FinancialStatus,
 
             proofingIsRequired: formData.get("proofingIsRequired") === "on",
             proofDueDate: typeof formData.get("proofDueDate") === "string" && formData.get("proofDueDate")
@@ -73,6 +76,9 @@ export async function updateOrder(formData: FormData){
                 contact: formData.get("contact") as string || "",
                 po_number: formData.get("po_number") as string || "",
                 sales_rep: formData.get("sales_rep") as string || "",
+                
+                orderStatus: formData.get("orderStatus") as OrderStatus || "NOT_STARTED" as OrderStatus,
+                financialStatus: formData.get("financialStatus") as FinancialStatus || "PENDING" as FinancialStatus,
 
                 proofingIsRequired: formData.get("proofingIsRequired") === "on",
                 proofDueDate: typeof formData.get("proofDueDate") === "string" && formData.get("proofDueDate")
