@@ -3,7 +3,7 @@ import prisma from "../../../../lib/db";
 import { updateOrder } from "@/actions/actions";
 import Form from 'next/form';
 import { SubmitButton } from '@/app/animations';
-import { inputBase, titleBase } from "@/app/ui";
+import { inputBase, OrderStatus, titleBase } from "@/app/ui";
 
 
 export default async function UpdateForm({ 
@@ -26,6 +26,22 @@ export default async function UpdateForm({
     "HP",
     "OTHER",
   ] as const;
+
+  const orderStatus = [
+    "NOT_STARTED",
+    "PROOF_AWAITING_APPROVAL",
+    "IN_PROGRESS",
+    "READY",
+    "COMPLETED",
+    "CANCELLED"
+  ] as const;
+
+  const financialStatus = [
+    "PENDING",
+    "INVOICED",
+    "PAID",
+    "REFUNDED"
+  ]
 
   const order = await prisma.order.findUnique({
     where: { id }});
@@ -63,6 +79,36 @@ export default async function UpdateForm({
         <Form action={updateOrder} className="space-y-6">
           <input type="hidden" name="id" value={order?.id} />
           <input type="hidden" name="updatedAt" value={order?.updatedAt.toISOString()}/>
+
+          {/* Status controls */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Order Status */}
+
+          <select
+              name="orderStatus"
+              defaultValue={order?.orderStatus as any}
+              className={inputBase}
+            >
+              {orderStatus.map((type) => (
+                <option key={type} value={type}>
+                  {type.replace(/_/g, " ")}
+                </option>
+              ))}
+            </select>
+
+            <select
+              name="financialStatus"
+              defaultValue={order?.financialStatus as any}
+              className={`${inputBase} bg-white`}
+            >
+              {financialStatus.map((status) => (
+                <option key={status} value={status}>
+                  {status.replace("_", " ")}
+                </option>
+              ))}
+            </select>
+        </div>
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="text" name="job_name" placeholder="Job Name" defaultValue={order?.job_name || ""} className={inputBase} />
