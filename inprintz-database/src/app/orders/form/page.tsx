@@ -1,6 +1,7 @@
 import { createOrder } from '@/actions/actions';
 import Form from 'next/form';
-import { inputBase, titleBase } from '@/app/ui';
+import { SubmitButton } from '@/app/animations';
+import { inputBase, titleBase } from "@/app/ui";
 
 export default function OrderFormPage() {
   return (
@@ -29,7 +30,7 @@ export default function OrderFormPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="datetime-local" name="proofDueDate" placeholder="Proof Due Date" className={inputBase} />
-            <select name="proof_type" className={`${inputBase} bg-white`}>
+            <select name="proof_type" className={`${inputBase} bg-white text-slate-800`}>
               <option value="PDF">PDF</option>
               <option value="HARD_COPY">HARD COPY</option>
             </select>
@@ -37,14 +38,14 @@ export default function OrderFormPage() {
 
           <input type="text" name="color_match_info" placeholder="Color Match Info" className={inputBase} />
 
-          <textarea name="notes" placeholder="Notes" className={`${inputBase} min-h-[80px]`}></textarea>
+          <textarea name="notes" placeholder="Notes" className={`${inputBase}`}></textarea>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="datetime-local" name="shippingDueDate" placeholder="Shipping Due Date" className={inputBase} />
             <input type="text" name="shipMethod" placeholder="Shipping Method" className={inputBase} />
           </div>
 
-          <textarea name="shipTo" placeholder="Ship To" className={`${inputBase} min-h-[80px]`}></textarea>
+          <textarea name="shipTo" placeholder="Ship To" className={`${inputBase}`}></textarea>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <select name="filesource" className={`${inputBase} bg-white`}>
@@ -59,19 +60,21 @@ export default function OrderFormPage() {
             <input type="text" name="fileFolderName" placeholder="File Folder Name" className={inputBase} />
           </div>
 
-          <textarea name="filesourcedescription" placeholder="File Source Description" className={`${inputBase} min-h-[80px]`}></textarea>
+          <textarea name="filesourcedescription" placeholder="File Source Description" className={`${inputBase}`}></textarea>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="text" name="hardware" placeholder="Hardware" className={inputBase} />
             <input type="text" name="installation" placeholder="Installation" className={inputBase} />
           </div>
 
-          <textarea name="additional_info_notes" placeholder="Additional Info Notes" className={`${inputBase} min-h-[100px]`}></textarea>
+          <textarea name="additional_info_notes" placeholder="Additional Info Notes" className={`${inputBase}`}></textarea>
 
           <div className="flex justify-end pt-6">
-            <button type="submit" className="rounded-xl bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-slate-900/10 transition-all hover:bg-slate-800 hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/50">
-              Create Order
-            </button>
+            <SubmitButton
+              label="Create Order"
+              pendingLabel="Creating…"
+              className="bg-blue-600 ring-blue-600/10 hover:bg-blue-700 focus-visible:ring-blue-400/40"
+            />
           </div>
         </Form>
       </section>

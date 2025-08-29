@@ -2,7 +2,9 @@
 import prisma from "../../../../lib/db";
 import { updateOrder } from "@/actions/actions";
 import Form from 'next/form';
-import { inputBase, titleBase } from '@/app/ui';
+import { SubmitButton } from '@/app/animations';
+import { inputBase, titleBase } from "@/app/ui";
+
 
 export default async function UpdateForm({ 
   params,
@@ -115,9 +117,11 @@ export default async function UpdateForm({
           <textarea name="additional_info_notes" placeholder="Additional Info Notes" defaultValue={order?.additional_info_notes || ""} className={`${inputBase} min-h-[100px]`}></textarea>
 
           <div className="flex justify-end pt-6">
-            <button type="submit" className="rounded-xl bg-slate-900 px-6 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-slate-900/10 transition-all hover:bg-slate-800 hover:shadow-md focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/50">
-              Update Order
-            </button>
+            <SubmitButton
+              label="Update Order"
+              pendingLabel="Updating…"
+              className="bg-emerald-600 ring-emerald-600/10 hover:bg-emerald-700 focus-visible:ring-emerald-400/40"
+            />
           </div>
         </Form>
       </section>

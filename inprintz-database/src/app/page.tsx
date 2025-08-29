@@ -1,6 +1,6 @@
 import prisma from "@/lib/db";
 import Link from 'next/link';
-import { titleBase } from "./ui";
+import { inputBase, titleBase } from "@/app/ui";
 
 
 export default async function Home() {
