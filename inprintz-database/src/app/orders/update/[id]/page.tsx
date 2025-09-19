@@ -1,20 +1,22 @@
 "use server";
 import prisma from "../../../../lib/db";
 import { updateOrder } from "@/actions/actions";
-import Form from 'next/form';
+import Link from "next/link";
 import { SubmitButton } from '@/app/animations';
 import { inputBase, OrderStatus, titleBase } from "@/app/ui";
+import { deleteAttachment, addAttachmentsToOrder } from "@/actions/attachments";
+import UpdateFilesForm from "./UpdateFilesForm";
 
 
 export default async function UpdateForm({ 
   params,
   searchParams,
 }: { 
-  params: Promise<{ id: string }>,
-  searchParams: { stale?: string }
+  params: Promise<{ id: string }>;          
+  searchParams: Promise<{ stale?: string }>;
 }) {
-  const { id } = await params;
-  const showStale = searchParams?.stale === '1';
+  const [{id}, sp] = await Promise.all([params, searchParams]);
+  const showStale = sp?.stale === '1';
 
   const proofTypes = ["PDF", "HARD_COPY"] as const;
   const fileSources = [
@@ -44,13 +46,14 @@ export default async function UpdateForm({
   ]
 
   const order = await prisma.order.findUnique({
-    where: { id }});
+    where: { id },
+    include: { attachments: true },
+  });
 
   const toLocal = (value?: string | Date | null) => {
     if (!value) return "";
     const d = new Date(value);
-    if (isNaN(d.getTime())) return "";
-    return d.toISOString().slice(0, 16);
+    return isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 16);
   };
 
   return (
@@ -60,7 +63,7 @@ export default async function UpdateForm({
             <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-2 text-center text-amber-800 shadow">
                 This order was updated recently.{" "}
               <a
-                href={`/orders/update/${(await params).id}`}
+                href={`/orders/update/${id}`}
                 className="underline font-medium text-amber-900 hover:text-amber-700"
               >
                 Click here
@@ -76,13 +79,11 @@ export default async function UpdateForm({
           </span>
         </h1>
 
-        <Form action={updateOrder} className="space-y-6">
+        <form action={updateOrder} className="space-y-6">
           <input type="hidden" name="id" value={order?.id} />
           <input type="hidden" name="updatedAt" value={order?.updatedAt.toISOString()}/>
 
-          {/* Status controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Order Status */}
 
           <select
               name="orderStatus"
@@ -135,7 +136,7 @@ export default async function UpdateForm({
 
           <input type="text" name="color_match_info" placeholder="Color Match Info" defaultValue={order?.color_match_info || ""} className={inputBase} />
 
-          <textarea name="notes" placeholder="Notes" defaultValue={order?.notes || ""} className={`${inputBase} min-h-[80px]`}></textarea>
+          <textarea name="notes" placeholder="Proofing Notes" defaultValue={order?.notes || ""} className={`${inputBase} min-h-[80px]`}></textarea>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="datetime-local" name="shippingDueDate" placeholder="Shipping Due Date" defaultValue={toLocal(order?.shippingDueDate as any)} className={inputBase} />
@@ -162,14 +163,92 @@ export default async function UpdateForm({
 
           <textarea name="additional_info_notes" placeholder="Additional Info Notes" defaultValue={order?.additional_info_notes || ""} className={`${inputBase} min-h-[100px]`}></textarea>
 
-          <div className="flex justify-end pt-6">
+          <textarea name="production_notes" placeholder="Production Notes" defaultValue={order?.production_notes || ""} className={`${inputBase} min-h-[100px]`}></textarea>
+          
+          <div className="flex justify-between pt-6">
             <SubmitButton
               label="Update Order"
               pendingLabel="Updating…"
               className="bg-emerald-600 ring-emerald-600/10 hover:bg-emerald-700 focus-visible:ring-emerald-400/40"
             />
+            <Link
+              href={`/orders/${id}/${order?.slug}`}
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/40"
+            >
+              ← Back to Order
+            </Link>
           </div>
-        </Form>
+        </form>
+                
+          {order?.attachments?.length ? (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-slate-800">Files</h3>
+              <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+                {order.attachments.map((a) => {
+                  const isImage = /\.(png|jpe?g|webp|gif)$/i.test(a.fileName);
+                  const isPdf = /\.pdf$/i.test(a.fileName);
+                  return (
+                    <li key={a.id} className="rounded-xl border p-3 bg-slate-50">
+                      <div className="text-xs text-slate-600 mb-2 truncate">{a.fileName}</div>
+
+                      {isImage && (
+                        <a href={a.url} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src={a.url}
+                            alt={a.fileName}
+                            className="max-h-40 w-auto rounded-lg object-contain bg-white"
+                          />
+                        </a>
+                      )}
+
+                      {isPdf && (
+                        <div className="text-xs">
+                          <a
+                            href={a.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
+                          >
+                            Preview PDF
+                          </a>
+                        </div>
+                      )}
+
+                      {!isImage && !isPdf && (
+                        <div className="text-xs">
+                          <a
+                            href={a.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
+                          >
+                            Download
+                          </a>
+                        </div>
+                      )}
+
+                      <div className="mt-3">
+                        <form action={deleteAttachment}>
+                          <input type="hidden" name="attachmentId" value={a.id} />
+                          <button
+                            type="submit"
+                            className="text-xs rounded-md border border-red-200 px-2 py-1 text-red-700 hover:bg-red-50"
+                          >
+                            Delete
+                          </button>
+                        </form>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : (
+            <div className="mt-6 text-sm text-slate-500">No files attached yet.</div>
+          )}
+
+          {order?.id && <UpdateFilesForm orderId={order.id} />}
+
       </section>
     </main>
   );

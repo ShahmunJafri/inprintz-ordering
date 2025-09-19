@@ -22,3 +22,19 @@ export function OrderStatus({label, value}: DetailItemProps){
      <p className="mt-2 text-sm text-slate-500">{label}: <span className="font-medium text-slate-700">{value}</span></p>
   );
 }
+
+export const financialStatusStyles: Record<string, string> = {
+  PENDING: "bg-amber-50 text-amber-700 ring-amber-200",
+  INVOICED: "bg-blue-50 text-blue-700 ring-blue-200",
+  PAID: "bg-green-50 text-green-700 ring-green-200",
+  REFUNDED: "bg-red-50 text-red-700 ring-red-200",
+};
+
+export const orderStatusStyles: Record<string, string> = {
+  NOT_STARTED: "bg-slate-100 text-slate-700 ring-slate-300",
+  PROOF_AWAITING_APPROVAL: "bg-amber-50 text-amber-700 ring-amber-200",
+  IN_PROGRESS: "bg-blue-50 text-blue-700 ring-blue-200",
+  READY: "bg-violet-50 text-violet-700 ring-violet-200",
+  COMPLETED: "bg-green-50 text-green-700 ring-green-200",
+  CANCELLED: "bg-red-50 text-red-700 ring-red-200",
+};

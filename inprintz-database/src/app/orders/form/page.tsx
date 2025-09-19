@@ -1,9 +1,13 @@
+"use client";
 import { createOrder } from '@/actions/actions';
-import Form from 'next/form';
 import { SubmitButton } from '@/app/animations';
 import { inputBase, titleBase } from "@/app/ui";
+import Link from 'next/link';
+import FilesField from './files';
+import { useRef } from "react";
 
 export default function OrderFormPage() {
+  const packRef = useRef<(() => void) | null>(null);
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-slate-50 via-white to-white flex items-center justify-center py-12 px-4">
       <section className="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white shadow-sm p-8">
@@ -13,7 +17,9 @@ export default function OrderFormPage() {
           </span>
         </h1>
 
-        <Form action={createOrder} className="space-y-6">
+        <form action={createOrder} 
+         onSubmit={() => packRef.current?.()}
+        className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="text" name="job_name" placeholder="Job Name" className={inputBase} />
             <input type="text" name="client" placeholder="Client" className={inputBase} />
@@ -69,14 +75,25 @@ export default function OrderFormPage() {
 
           <textarea name="additional_info_notes" placeholder="Additional Info Notes" className={`${inputBase}`}></textarea>
 
-          <div className="flex justify-end pt-6">
+          <textarea name="production_notes" placeholder="Production Notes" className={`${inputBase}`}></textarea>
+
+          <FilesField packRef={packRef} />
+
+          <div className="flex justify-between pt-6">
             <SubmitButton
               label="Create Order"
               pendingLabel="Creating…"
               className="bg-blue-600 ring-blue-600/10 hover:bg-blue-700 focus-visible:ring-blue-400/40"
             />
+          
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-slate-400/40"
+            >
+              ← Back to Orders
+            </Link>
           </div>
-        </Form>
+        </form>
       </section>
     </main>
   );

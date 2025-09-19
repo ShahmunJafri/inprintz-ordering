@@ -47,8 +47,32 @@ model Order {
 
   //Additonal Information
   additional_info_notes String?
+
+  //Production Notes
+  production_notes String?
+
+  deleted Boolean @default(false)
+
+  attachments Attachment[]
   
   @@unique([id, updatedAt])
+}
+
+model Attachment {
+  id        String @id @default(uuid())
+  orderId   String
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fileName  String
+  url       String
+
+  @@unique([orderId, url])
+}
+
+
+enum DoubleSingle {
+  DOUBLESIDED
+  SINGLESIDED
+  NULL
 }
 
 enum FileSource {
